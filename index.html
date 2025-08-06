@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lighty AI - Expert AI Platform Demo (with Gemini API)</title>
+    <title>Lighty AI - Expert AI Platform Demo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,18 +40,6 @@
         @keyframes bounce {
             0%, 80%, 100% { transform: scale(0); }
             40% { transform: scale(1.0); }
-        }
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border-left-color: #09f;
-            animation: spin 1s ease infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -101,10 +89,6 @@
                 </header>
                 <main class="p-8">
                     <h2 class="text-2xl font-semibold text-gray-800 mb-6">Plant Floor Status - Bay 7</h2>
-                    <div id="maintenance-suggestion-container" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                        <h3 class="font-bold text-blue-800">✨ AI-Powered Suggestion</h3>
-                        <p id="maintenance-suggestion-text" class="text-blue-700 mt-1 text-sm"></p>
-                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <!-- Card 1: Stamping Press (Alert) -->
                         <div id="stamping-press-card" class="bg-red-50 border-2 border-red-500 rounded-xl p-6 shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="showScreen('interaction-screen')">
@@ -119,7 +103,8 @@
                                 <span id="stamping-press-attention" class="font-semibold">Needs Attention</span>
                             </div>
                         </div>
-                        <!-- Other cards remain the same -->
+
+                        <!-- Card 2: Assembly Line -->
                         <div class="bg-white rounded-xl p-6 shadow-md transform hover:scale-105 transition-transform duration-300">
                             <div class="flex justify-between items-start">
                                 <h3 class="font-bold text-xl text-gray-800">Assembly Line A-03</h3>
@@ -132,6 +117,8 @@
                                 <span>Cycle Time: 42s</span>
                             </div>
                         </div>
+
+                        <!-- Card 3: CNC Mill -->
                         <div class="bg-white rounded-xl p-6 shadow-md transform hover:scale-105 transition-transform duration-300">
                             <div class="flex justify-between items-start">
                                 <h3 class="font-bold text-xl text-gray-800">CNC Mill C-08</h3>
@@ -167,12 +154,9 @@
                 </main>
 
                 <footer class="p-4 bg-gray-50 border-t border-gray-200 flex-shrink-0">
-                    <form id="chat-form" class="flex items-center space-x-4">
-                        <input id="chat-input" type="text" placeholder="Type your message..." class="flex-grow px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
-                            Send
-                        </button>
-                    </form>
+                    <div id="user-options" class="flex items-center justify-center space-x-4">
+                        <!-- User action buttons will be appended here -->
+                    </div>
                 </footer>
             </div>
         </div>
@@ -180,35 +164,55 @@
         <!-- Screen 4: Resolution Screen -->
         <div id="resolution-screen" class="hidden w-full max-w-md mx-auto">
             <div class="bg-white rounded-xl shadow-lg p-8 text-center">
-                <div id="resolution-content">
-                    <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
-                        <svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    </div>
-                    <h2 class="text-2xl font-bold text-gray-900">Issue Resolved!</h2>
-                    <p class="text-gray-600 mt-2">Stamping Press P-12 is back online.</p>
-                    
-                    <div class="mt-6 text-left bg-gray-50 p-4 rounded-lg">
-                        <h3 class="font-semibold text-gray-800 mb-2">✨ AI-Generated Session Summary:</h3>
-                        <div id="summary-container" class="space-y-2 text-sm text-gray-600">
-                            <!-- AI summary will be injected here -->
-                            <div class="flex items-center justify-center py-4">
-                               <div class="spinner"></div>
-                            </div>
+                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+                    <svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900">Issue Resolved!</h2>
+                <p class="text-gray-600 mt-2">Stamping Press P-12 is back online.</p>
+                
+                <div class="mt-6 text-left bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-gray-800 mb-2">Session Summary:</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Time to Resolution:</span>
+                            <span class="font-medium text-gray-900">8 minutes</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Estimated Downtime Avoided:</span>
+                            <span class="font-medium text-gray-900">~2 hours</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">New Knowledge Captured:</span>
+                            <span class="font-medium text-green-600">1 insight</span>
                         </div>
                     </div>
-                    <button onclick="finishResolution()" class="w-full mt-8 bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
-                        Return to Dashboard
-                    </button>
                 </div>
+
+                <button onclick="finishResolution()" class="w-full mt-8 bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
+                    Return to Dashboard
+                </button>
             </div>
         </div>
+
     </div>
 
     <script>
         // --- State and Data ---
         let currentScreen = 'login-screen';
-        let chatHistory = [];
-        const apiKey = ""; // This will be handled by the execution environment.
+        let dialogueStep = 0;
+
+        const dialogue = [
+            { type: 'user', text: "I have an alert on Stamping Press P-12. Error code 7B-441.", options: [] },
+            { type: 'ai', text: "Hello Sarah. I'm Dave's Digital Twin. I see the alert for error 7B-441. I remember Dave dealt with a similar pressure sensor fault about six months ago. Let's start by checking the main hydraulic pressure manifold. Can you open the main access panel, P-A1?", options: ["Okay, I've opened panel P-A1."] },
+            { type: 'user', text: "Okay, I've opened panel P-A1.", options: [] },
+            { type: 'ai', text: "Great. Look for the primary sensor connector, it's labeled C-7. Does it look securely connected?", image: "https://placehold.co/400x300/DDDDDD/333333?text=Diagram+of+Panel+P-A1", options: ["It looks connected, but maybe a little loose."] },
+            { type: 'user', text: "It looks connected, but maybe a little loose.", options: [] },
+            { type: 'ai', text: "That's a key detail. Here's something Dave always mentioned: 'You have to jiggle this connector just so, because the vibration from the press sometimes loosens the contact just enough to throw a fault, but not enough to look disconnected.' Try unplugging it, checking the pins for dust, and plugging it back in firmly until you hear a click.", options: ["Done. I heard the click."] },
+            { type: 'user', text: "Done. I heard the click.", options: [] },
+            { type: 'ai', text: "Excellent. Now, please try clearing the error from the main control panel. I'll monitor the system status.", options: ["Okay, clearing the error now..."] },
+            { type: 'user', text: "Okay, clearing the error now...", options: [] },
+            { type: 'ai', text: "I'm showing the fault has cleared and system pressure is returning to nominal levels. Great job, Sarah! We've resolved the issue. I've logged this interaction to refine my knowledge base for future problems.", options: ["Finish Session"] },
+        ];
 
         // --- Core Functions ---
         function showScreen(screenId) {
@@ -219,83 +223,68 @@
             if (screenId === 'interaction-screen') {
                 startDialogue();
             }
+            if (screenId === 'dashboard-screen') {
+                // Reset dialogue if returning to dashboard
+                dialogueStep = 0;
+                document.getElementById('chat-container').innerHTML = '';
+            }
         }
 
         function startDialogue() {
-            const chatContainer = document.getElementById('chat-container');
-            chatContainer.innerHTML = ''; // Clear previous chat
-            chatHistory = [
-                { role: "user", parts: [{ text: "I'm Sarah, a technician. I'm looking at Stamping Press P-12 which has an alert: Error Code 7B-441 (Pressure Sensor Fault)." }] },
-                { role: "model", parts: [{ text: "Hello Sarah. I'm Dave's Digital Twin. I see the alert for error 7B-441. I remember Dave dealt with a similar pressure sensor fault about six months ago. Let's start by checking the main hydraulic pressure manifold. Can you open the main access panel, P-A1?" }] }
-            ];
-
-            // Display the initial AI message
-            const initialAiBubble = createChatBubble(chatHistory[1].parts[0].text, 'ai');
-            chatContainer.appendChild(initialAiBubble);
+            dialogueStep = 0;
+            document.getElementById('chat-container').innerHTML = '';
+            document.getElementById('user-options').innerHTML = '';
+            advanceDialogue();
         }
 
-        async function handleUserMessage(event) {
-            event.preventDefault();
-            const chatInput = document.getElementById('chat-input');
-            const userInput = chatInput.value.trim();
-            if (!userInput) return;
-
-            // Display user message
-            const userBubble = createChatBubble(userInput, 'user');
-            document.getElementById('chat-container').appendChild(userBubble);
-            chatHistory.push({ role: "user", parts: [{ text: userInput }] });
-            chatInput.value = '';
-            document.getElementById('chat-container').scrollTop = document.getElementById('chat-container').scrollHeight;
-
-            showTypingIndicator();
-
-            // Special keyword to end session
-            if (userInput.toLowerCase().includes("finish session") || userInput.toLowerCase().includes("it's fixed")) {
-                hideTypingIndicator();
-                const finalAiBubble = createChatBubble("Great job! I'll prepare the session summary.", 'ai');
-                document.getElementById('chat-container').appendChild(finalAiBubble);
-                chatHistory.push({ role: "model", parts: [{ text: "Great job! I'll prepare the session summary." }] });
-                setTimeout(() => {
-                    showScreen('resolution-screen');
-                    generateSummary();
-                }, 2000);
+        function advanceDialogue() {
+            if (dialogueStep >= dialogue.length) {
+                setTimeout(() => showScreen('resolution-screen'), 1000);
                 return;
             }
 
-            // Call Gemini API for a response
-            const systemInstruction = "You are Dave's Digital Twin, an expert AI assistant for industrial machinery. You are helping a technician named Sarah troubleshoot a Stamping Press P-12. Be concise, helpful, and guide her step-by-step. Ask clarifying questions. Refer to past experiences as if you are a digital version of an expert named Dave.";
-            const prompt = `System Instruction: ${systemInstruction}\n\nConversation History:\n${JSON.stringify(chatHistory)}\n\nSarah's latest message: "${userInput}"\n\nYour next response:`;
-            
-            const aiResponseText = await callGeminiAPI(prompt, chatHistory);
+            const step = dialogue[dialogueStep];
+            const chatContainer = document.getElementById('chat-container');
+            const userOptionsContainer = document.getElementById('user-options');
 
-            hideTypingIndicator();
-            const aiBubble = createChatBubble(aiResponseText, 'ai');
-            document.getElementById('chat-container').appendChild(aiBubble);
-            chatHistory.push({ role: "model", parts: [{ text: aiResponseText }] });
-            document.getElementById('chat-container').scrollTop = document.getElementById('chat-container').scrollHeight;
-        }
+            // Clear previous options
+            userOptionsContainer.innerHTML = '';
 
-        async function generateSummary() {
-            const prompt = `Summarize the following technical troubleshooting conversation into a concise report. Extract the 'Time to Resolution', 'Estimated Downtime Avoided', and 'New Knowledge Captured'. Format the output as simple HTML with divs for each item, like this: <div><strong>Time to Resolution:</strong> X minutes</div>. Conversation: ${JSON.stringify(chatHistory)}`;
-            const summaryHtml = await callGeminiAPI(prompt, []); // Pass empty history as the prompt is self-contained
-            document.getElementById('summary-container').innerHTML = summaryHtml;
+            if (step.type === 'user') {
+                const userBubble = createChatBubble(step.text, 'user');
+                chatContainer.appendChild(userBubble);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                dialogueStep++;
+                // AI "thinks" before responding
+                showTypingIndicator();
+                setTimeout(advanceDialogue, 1500 + Math.random() * 500);
+            } else { // AI's turn
+                hideTypingIndicator();
+                const aiBubble = createChatBubble(step.text, 'ai', step.image);
+                chatContainer.appendChild(aiBubble);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                // Display user options for the next step
+                if (step.options && step.options.length > 0) {
+                    step.options.forEach(optionText => {
+                        const button = document.createElement('button');
+                        button.className = "bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300";
+                        button.textContent = optionText;
+                        button.onclick = () => {
+                            dialogueStep++;
+                            advanceDialogue();
+                        };
+                        userOptionsContainer.appendChild(button);
+                    });
+                }
+            }
         }
         
-        async function generateMaintenanceSuggestion() {
-            const prompt = `Based on the following resolved issue, suggest a single, actionable preventative maintenance task for the technician. The issue was a loose sensor connector on a stamping press that was fixed by unplugging and replugging it. Be concise. Conversation: ${JSON.stringify(chatHistory)}`;
-            const suggestionText = await callGeminiAPI(prompt, []);
-            const suggestionContainer = document.getElementById('maintenance-suggestion-container');
-            const suggestionTextElement = document.getElementById('maintenance-suggestion-text');
-            suggestionTextElement.textContent = suggestionText;
-            suggestionContainer.classList.remove('hidden');
-        }
-
         function finishResolution() {
-            generateMaintenanceSuggestion();
             resetStampingPressCard();
             showScreen('dashboard-screen');
         }
-        
+
         function resetStampingPressCard() {
             const card = document.getElementById('stamping-press-card');
             card.classList.remove('bg-red-50', 'border-red-500');
@@ -310,51 +299,8 @@
             document.getElementById('stamping-press-attention').textContent = 'Online';
         }
 
-        // --- Gemini API Call ---
-        async function callGeminiAPI(prompt, history) {
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-            
-            // We construct a simple history for the API call if one is provided
-            const contents = history.length > 0 ? [...history, { role: "user", parts: [{ text: prompt }] }] : [{ role: "user", parts: [{ text: prompt }] }];
-
-            const payload = { contents };
-
-            try {
-                // Exponential backoff for retries
-                let response;
-                let delay = 1000;
-                for (let i = 0; i < 5; i++) {
-                    response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (response.ok) break;
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    delay *= 2;
-                }
-
-                if (!response.ok) {
-                    throw new Error(`API request failed with status ${response.status}`);
-                }
-
-                const result = await response.json();
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    return result.candidates[0].content.parts[0].text;
-                } else {
-                    console.error("Unexpected API response structure:", result);
-                    return "I'm having trouble connecting to my knowledge base right now. Please try again in a moment.";
-                }
-            } catch (error) {
-                console.error("Error calling Gemini API:", error);
-                return "I'm sorry, I encountered an error. Could you please repeat that?";
-            }
-        }
-
         // --- UI Helper Functions ---
-        function createChatBubble(text, type) {
+        function createChatBubble(text, type, imageUrl = null) {
             const wrapper = document.createElement('div');
             wrapper.className = `flex items-start gap-3 fade-in ${type === 'user' ? 'justify-end' : 'justify-start'}`;
             
@@ -363,8 +309,16 @@
             
             const textElement = document.createElement('p');
             textElement.className = 'text-sm';
-            textElement.innerHTML = text; // Use innerHTML to render summary HTML
+            textElement.textContent = text;
             bubble.appendChild(textElement);
+
+            if (imageUrl) {
+                const image = document.createElement('img');
+                image.src = imageUrl;
+                image.alt = "Diagram";
+                image.className = "mt-3 rounded-lg border border-gray-300";
+                bubble.appendChild(image);
+            }
 
             const avatar = document.createElement('img');
             avatar.className = 'w-8 h-8 rounded-full';
@@ -410,7 +364,10 @@
         }
 
         // --- Initial Load ---
-        document.getElementById('chat-form').addEventListener('submit', handleUserMessage);
+        window.onload = () => {
+             // For demo purposes, start at login screen.
+        };
+
     </script>
 </body>
 </html>
